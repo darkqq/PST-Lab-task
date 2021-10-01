@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -45,10 +46,6 @@ public class Worker {
     @JoinColumn(name = "PUBLISHING_OFFICE_ID")
     private PublishingOffice publishingOffice;
 
-
-    public void addPublication(Publication publication) {
-        publications.add(publication);
-    }
 
     @PreRemove
     public void removeWorker() {
