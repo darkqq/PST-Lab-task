@@ -4,14 +4,12 @@ package com.devtask.publishinghousestructure.service.publicationService;
 import com.devtask.publishinghousestructure.entity.Publication;
 import com.devtask.publishinghousestructure.repository.PublicationDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-
 @Service
-public class PublicationServiceImpl implements PublicationService{
+public class PublicationServiceImpl implements PublicationService {
 
     private PublicationDAO publicationDAO;
 
@@ -37,8 +35,27 @@ public class PublicationServiceImpl implements PublicationService{
     }
 
     @Override
-    public List<Publication> getNullPublications() {
-        List<Publication> list = publicationDAO.findAll();
-        return list.stream().filter(e->e.getWorkers().isEmpty()).collect(Collectors.toList());
+    public Page<Publication> getAllPublications(Pageable pageable) {
+        return publicationDAO.findAll(pageable);
+    }
+
+    @Override
+    public Publication getPublicationById(int id) {
+        return publicationDAO.getOne(id);
+    }
+
+    @Override
+    public boolean isExists(Publication publication) {
+        return publicationDAO.existsByName(publication.getName());
+    }
+
+    @Override
+    public void deleteById(int id) {
+        publicationDAO.deleteById(id);
+    }
+
+    @Override
+    public void delete(Publication publication) {
+        publicationDAO.delete(publication);
     }
 }

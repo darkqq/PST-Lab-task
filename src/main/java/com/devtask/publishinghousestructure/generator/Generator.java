@@ -48,12 +48,4 @@ public class Generator {
         }
         return resultList;
     }*/
-
-    public List<Worker> getOfficeList() {
-        List<Worker> workers = new ArrayList<>();
-
-
-        return workers;
-    }
-
 }

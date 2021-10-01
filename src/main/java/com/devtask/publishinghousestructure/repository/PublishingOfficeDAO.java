@@ -9,9 +9,14 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface PublishingOfficeDAO  extends JpaRepository<PublishingOffice, Integer> {
+public interface PublishingOfficeDAO extends JpaRepository<PublishingOffice, Integer> {
     Page<PublishingOffice> getAllByIdIn(Iterable<Integer> ids, Pageable pageRequest);
+
     PublishingOffice findById(int id);
+
     PublishingOffice findByName(String name);
+
     Page<PublishingOffice> getAllByWorkersIn(Iterable<Worker> workers, Pageable pageRequest);
+
+    boolean existsByName(String name);
 }

@@ -1,12 +1,12 @@
 package com.devtask.publishinghousestructure.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -24,6 +24,15 @@ public class Publication {
     @Column(name = "PUBLICATION_NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "publications", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Worker> workers;
+    @JsonBackReference
+    @ManyToMany(mappedBy = "publications", fetch = FetchType.EAGER)
+    private Set<Worker> workers;
+
+    @PreRemove
+    public void removeTargetPublication() {
+        for (Worker worker : workers) {
+            worker.getPublications().remove(this);
+        }
+    }
+
 }

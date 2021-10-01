@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkerDAO extends JpaRepository<Worker, Integer> {
     Page<Worker> getAllByIdIn(Iterable<Integer> ids, Pageable pageRequest);
+
     Worker getWorkerById(int id);
 
     Worker findWorkerByWorkerDetails(WorkerDetails workerDetails);
@@ -18,4 +19,6 @@ public interface WorkerDAO extends JpaRepository<Worker, Integer> {
     Worker findWorkerByWorkerDetails_Name(String name);
 
     Worker getWorkerByLocalUsername(String localUsername);
+
+    boolean existsByLocalUsername(String localUsername);
 }

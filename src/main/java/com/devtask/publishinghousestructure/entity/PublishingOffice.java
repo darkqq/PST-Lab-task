@@ -24,6 +24,7 @@ public class PublishingOffice {
     @Column(name = "OFFICE_NAME")
     private String name;
 
-    @OneToMany(mappedBy = "publishingOffice", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "publishingOffice", cascade = CascadeType.REMOVE)
     private List<Worker> workers;
+
 }

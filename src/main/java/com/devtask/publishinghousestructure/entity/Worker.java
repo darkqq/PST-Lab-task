@@ -1,14 +1,15 @@
 package com.devtask.publishinghousestructure.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @Getter
@@ -24,16 +25,18 @@ public class Worker {
     private int id;
 
     @OneToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "WORKER_DETAILS_ID")
     private WorkerDetails workerDetails;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @JsonManagedReference
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @JoinTable(name = "WORKER_PUBLICATION",
             joinColumns = {
                     @JoinColumn(name = "WORKER_ID")},
             inverseJoinColumns = {
                     @JoinColumn(name = "PUBLICATION_ID")})
-    private List<Publication> publications;
+    private Set<Publication> publications;
 
     @Column(name = "LOCAL_USERNAME")
     private String localUsername;
@@ -42,18 +45,15 @@ public class Worker {
     @JoinColumn(name = "PUBLISHING_OFFICE_ID")
     private PublishingOffice publishingOffice;
 
-    @Override
-    public boolean equals(Object o) {
-        Worker worker = (Worker) o;
-        return worker.getWorkerDetails().getName().equals(this.workerDetails.getName()) && worker.getWorkerDetails().getSurname().equals(this.workerDetails.getSurname());
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, workerDetails, publications, localUsername, publishingOffice);
-    }
-
-    public void addPublication(Publication publication){
+    public void addPublication(Publication publication) {
         publications.add(publication);
+    }
+
+    @PreRemove
+    public void removeWorker() {
+        for (Publication publication : publications) {
+            publication.getWorkers().remove(this);
+        }
     }
 }

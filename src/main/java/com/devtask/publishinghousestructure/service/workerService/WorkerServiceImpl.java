@@ -4,12 +4,12 @@ package com.devtask.publishinghousestructure.service.workerService;
 import com.devtask.publishinghousestructure.entity.Worker;
 import com.devtask.publishinghousestructure.repository.WorkerDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class WorkerServiceImpl implements WorkerService{
+public class WorkerServiceImpl implements WorkerService {
 
     private WorkerDAO workerDAO;
 
@@ -35,7 +35,27 @@ public class WorkerServiceImpl implements WorkerService{
     }
 
     @Override
-    public List<Worker> getAll() {
-        return workerDAO.findAll();
+    public Page<Worker> getAllWorkers(Pageable pageable) {
+        return workerDAO.findAll(pageable);
+    }
+
+    @Override
+    public Worker getWorkerById(int id) {
+        return workerDAO.getWorkerById(id);
+    }
+
+    @Override
+    public boolean isExists(Worker worker) {
+        return workerDAO.existsByLocalUsername(worker.getLocalUsername());
+    }
+
+    @Override
+    public void deleteById(int id) {
+        workerDAO.deleteById(id);
+    }
+
+    @Override
+    public void delete(Worker worker) {
+        workerDAO.delete(worker);
     }
 }
